@@ -20,13 +20,16 @@ enum CurrencyFormatter {
         "\(symbol) \(number(value, fractionDigits: fractionDigits))"
     }
 
-    static func compact(_ value: Decimal, symbol: String = "Ksh") -> String {
-        let number = value.formatted(
+    static func plain(_ value: Decimal) -> String {
+        value.formatted(
             .number
                 .precision(.fractionLength(0...2))
                 .grouping(.never)
                 .locale(Locale(identifier: "en_US_POSIX")))
-        return "\(symbol) \(number)"
+    }
+
+    static func compact(_ value: Decimal, symbol: String = "Ksh") -> String {
+        "\(symbol) \(plain(value))"
     }
 
     static func decimal(from text: String) -> Decimal? {

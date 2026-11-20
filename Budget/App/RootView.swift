@@ -24,7 +24,9 @@ struct RootView: View {
             switch selectedTab {
             case .home:
                 HomeView(viewModel: homeViewModel, onViewAll: { selectedTab = .budgets })
-            case .budgets, .reports, .account:
+            case .budgets:
+                BudgetsView(viewModel: BudgetsViewModel(repository: repository))
+            case .reports, .account:
                 Text(selectedTab.title)
                     .font(AppFont.bold(22, relativeTo: .title2))
             }
