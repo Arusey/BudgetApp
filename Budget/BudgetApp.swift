@@ -6,16 +6,24 @@
 //
 
 import SwiftUI
-import CoreData
+import Foundation
 
 @main
 struct BudgetApp: App {
-    let persistenceController = PersistenceController.shared
+    private let repository: any BudgetRepository
+
+    init() {
+        let inMemory = ProcessInfo.processInfo.arguments.contains("-uiTesting")
+        do {
+            repository = try SwiftDataBudgetRepository(inMemory: inMemory)
+        } catch {
+            repository = MockBudgetRepository()
+        }
+    }
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            RootView(repository: repository)
         }
     }
 }
