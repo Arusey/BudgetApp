@@ -19,4 +19,13 @@ enum CurrencyFormatter {
     static func string(_ value: Decimal, symbol: String = "Ksh.", fractionDigits: Int = 1) -> String {
         "\(symbol) \(number(value, fractionDigits: fractionDigits))"
     }
+
+    static func decimal(from text: String) -> Decimal? {
+        let normalized = text
+            .trimmingCharacters(in: .whitespaces)
+            .replacingOccurrences(of: ",", with: ".")
+        let isNumeric = normalized.allSatisfy { ("0"..."9").contains($0) || $0 == "." }
+        guard !normalized.isEmpty, isNumeric, normalized.filter({ $0 == "." }).count <= 1 else { return nil }
+        return Decimal(string: normalized, locale: Locale(identifier: "en_US_POSIX"))
+    }
 }

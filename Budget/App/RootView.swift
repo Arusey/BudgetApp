@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RootView: View {
     @State private var selectedTab: AppTab = .home
+    @State private var isAddingItem = false
     @State private var homeViewModel: HomeViewModel
     private let repository: any BudgetRepository
 
@@ -32,7 +33,15 @@ struct RootView: View {
         .transition(.opacity)
         .animation(.easeInOut(duration: 0.2), value: selectedTab)
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            CustomTabBar(selection: $selectedTab, onAdd: {})
+            CustomTabBar(selection: $selectedTab, onAdd: { isAddingItem = true })
+        }
+        .fullScreenCover(isPresented: $isAddingItem, onDismiss: { homeViewModel.load() }) {
+            NavigationStack {
+                AddItemView(
+                    viewModel: AddItemViewModel(repository: repository),
+                    onSaved: { _ in isAddingItem = false },
+                    onClose: { isAddingItem = false })
+            }
         }
     }
 }
