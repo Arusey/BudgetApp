@@ -23,8 +23,6 @@ An iOS budgeting app built with SwiftUI and MVVM. It tracks spending against a m
 
 - **Reports and Account tabs:** both show placeholder text only
 - **UI tests:** none.
-- **More unit tests:** `CurrencyFormatter` and `DateFormatting` 
-- **Product Sans:** the font files are not in `Budget/Resources/Fonts`, so the app falls back to the system font.
 - **Material Symbols:** the tab bar and bell use SF Symbols.
 
 ## Setup
