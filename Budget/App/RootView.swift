@@ -10,6 +10,7 @@ import SwiftUI
 struct RootView: View {
     @State private var selectedTab: AppTab = .home
     @State private var isAddingItem = false
+    @State private var savedExpense: Expense?
     @State private var homeViewModel: HomeViewModel
     private let repository: any BudgetRepository
 
@@ -35,14 +36,27 @@ struct RootView: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             CustomTabBar(selection: $selectedTab, onAdd: { isAddingItem = true })
         }
-        .fullScreenCover(isPresented: $isAddingItem, onDismiss: { homeViewModel.load() }) {
+        .fullScreenCover(isPresented: $isAddingItem, onDismiss: didFinishAdding) {
             NavigationStack {
                 AddItemView(
                     viewModel: AddItemViewModel(repository: repository),
-                    onSaved: { _ in isAddingItem = false },
+                    onSaved: { savedExpense = $0 },
                     onClose: { isAddingItem = false })
+                .navigationDestination(item: $savedExpense) { expense in
+                    SuccessView(expense: expense, onGoHome: goHome)
+                }
             }
         }
+    }
+
+    private func goHome() {
+        selectedTab = .home
+        isAddingItem = false
+    }
+
+    private func didFinishAdding() {
+        savedExpense = nil
+        homeViewModel.load()
     }
 }
 
